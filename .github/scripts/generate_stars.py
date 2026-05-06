@@ -170,19 +170,15 @@ def fmt_row(r: dict, now: datetime) -> str:
     return f"| [`{name}`]({url}) | ⭐{stars} | {status} | {desc or '_(no description)_'} |"
 
 
-def render(lists: list[dict], viewer: str) -> str:
+def render(lists: list[dict]) -> str:
     now = datetime.now(timezone.utc)
     today = now.strftime("%Y-%m-%d")
     non_empty = [l for l in lists if l["total"] > 0]
     unique_repos = len({r["nameWithOwner"] for l in non_empty for r in l["repos"]})
-    repo_url = f"https://github.com/{viewer}/awesome-stars"
     out = [
         "## ⭐ Curated Stars",
         "",
-        (
-            f"**{unique_repos} repos** across **{len(non_empty)} categories**, "
-            f"refreshed daily via [awesome-stars]({repo_url}). Click any section to expand."
-        ),
+        f"**{unique_repos} repos** across **{len(non_empty)} categories**. Click any section to expand.",
         "",
     ]
     sorted_lists = sorted(
@@ -236,10 +232,9 @@ def main() -> int:
     if "STARS_TOKEN" not in os.environ:
         print("STARS_TOKEN env var is required", file=sys.stderr)
         return 1
-    viewer = fetch_viewer()
-    print(f"Building catalog for @{viewer}")
+    print(f"Building catalog for @{fetch_viewer()}")
     lists = fetch_lists()
-    block = render(lists, viewer)
+    block = render(lists)
     changed = update_readme(block)
     print("Updated README.md" if changed else "No changes")
     return 0
