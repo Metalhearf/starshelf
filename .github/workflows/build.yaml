@@ -14,6 +14,10 @@ concurrency:
 
 jobs:
   build:
+    # The source repo is meant to be used as a template, not run on its own.
+    # Forks and template-derived repos have a different repository name and
+    # will pass this guard.
+    if: github.repository != 'Metalhearf/awesome-stars'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
