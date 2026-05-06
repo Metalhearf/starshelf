@@ -176,7 +176,7 @@ def render(lists: list[dict]) -> str:
     non_empty = [l for l in lists if l["total"] > 0]
     unique_repos = len({r["nameWithOwner"] for l in non_empty for r in l["repos"]})
     out = [
-        "## ⭐ Curated Stars",
+        "## ⭐ My [Starshelf](https://github.com/Metalhearf/starshelf)",
         "",
         f"**{unique_repos} repos** across **{len(non_empty)} categories**. Click any section to expand.",
         "",
