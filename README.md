@@ -1,4 +1,4 @@
-# awesome-stars
+# Starshelf
 
 A self-rebuilding index of GitHub stars, sorted by the user-lists they belong to. Use this template, point it at your own account and you get the same thing for your stars.
 

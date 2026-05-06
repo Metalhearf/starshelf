@@ -9,7 +9,7 @@
 # The workflow fetches the rendered block from your stars repo and pastes it
 # in. No PAT needed; the source repo is public.
 #
-# Edit STARS_SOURCE below to point at the repo where your awesome-stars
+# Edit STARS_SOURCE below to point at the repo where your Starshelf
 # instance lives.
 
 name: Sync stars

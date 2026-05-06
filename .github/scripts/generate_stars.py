@@ -38,7 +38,7 @@ def graphql(query: str, variables: dict | None = None, attempts: int = 4) -> dic
         headers={
             "Authorization": f"bearer {token}",
             "Content-Type": "application/json",
-            "User-Agent": "awesome-stars",
+            "User-Agent": "starshelf",
         },
     )
     for attempt in range(1, attempts + 1):
