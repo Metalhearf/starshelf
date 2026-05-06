@@ -14,10 +14,6 @@ concurrency:
 
 jobs:
   build:
-    # The source repo is meant to be used as a template, not run on its own.
-    # Forks and template-derived repos have a different repository name and
-    # will pass this guard.
-    if: github.repository != 'Metalhearf/awesome-stars'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -26,7 +22,17 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Skip on template repositories
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(gh api repos/${{ github.repository }} --jq '.is_template')" = "true" ]; then
+            echo "is_template=true — this repo is the template, nothing to build."
+            echo "SKIP=1" >> "$GITHUB_ENV"
+          fi
+
       - name: Rebuild catalog
+        if: env.SKIP != '1'
         env:
           STARS_TOKEN: ${{ secrets.STARS_TOKEN }}
         run: python .github/scripts/generate_stars.py
