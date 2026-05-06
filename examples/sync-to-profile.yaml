@@ -1,0 +1,64 @@
+# Example workflow for your username/username profile repo.
+#
+# Drop this at .github/workflows/sync-stars.yaml in your profile repo, then
+# add empty marker tags somewhere in your profile README.md:
+#
+#     <!-- STARS:START -->
+#     <!-- STARS:END -->
+#
+# The workflow fetches the rendered block from your awesome-stars repo and
+# pastes it in. No PAT needed; the source repo is public.
+
+name: Sync stars from awesome-stars
+
+on:
+  schedule:
+    - cron: '30 6 * * *'  # 30 minutes after the awesome-stars build
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-stars
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Fetch upstream catalog
+        run: curl -fsSL -o /tmp/upstream.md "https://raw.githubusercontent.com/${{ github.repository_owner }}/awesome-stars/main/README.md"
+
+      - name: Replace marker block in profile README
+        run: |
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          START = "<!-- STARS:START -->"
+          END = "<!-- STARS:END -->"
+          src = Path("/tmp/upstream.md").read_text()
+          dst = Path("README.md")
+          m = re.search(re.escape(START) + r".*?" + re.escape(END), src, re.DOTALL)
+          if not m:
+              raise SystemExit("Markers not found in upstream README")
+          block = m.group(0)
+          text = dst.read_text()
+          if not re.search(re.escape(START) + r".*?" + re.escape(END), text, re.DOTALL):
+              raise SystemExit("Markers not found in profile README")
+          dst.write_text(re.sub(re.escape(START) + r".*?" + re.escape(END), lambda _: block, text, flags=re.DOTALL))
+          PY
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet README.md; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "chore: sync stars from awesome-stars"
+          git push
