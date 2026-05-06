@@ -94,7 +94,7 @@ MIT. Fork it, change it, do whatever you want.
 | [`gethomepage/homepage`](https://github.com/gethomepage/homepage) | ⭐29.9k | 🔥 | A highly customizable homepage (or startpage / application dashboard) with Docker and service API integrati... |
 | [`searxng/searxng`](https://github.com/searxng/searxng) | ⭐29.4k | 🔥 | SearXNG is a free internet metasearch engine which aggregates results from various search services and data... |
 | [`chatwoot/chatwoot`](https://github.com/chatwoot/chatwoot) | ⭐29.0k | 🔥 | Open-source live-chat, email support, omni-channel desk. An alternative to Intercom, Zendesk, Salesforce Se... |
-| [`sipeed/picoclaw`](https://github.com/sipeed/picoclaw) | ⭐28.7k | 🔥 | Tiny, Fast, and Deployable anywhere — automate the mundane, unleash your creativity |
+| [`sipeed/picoclaw`](https://github.com/sipeed/picoclaw) | ⭐28.8k | 🔥 | Tiny, Fast, and Deployable anywhere — automate the mundane, unleash your creativity |
 | [`openwrt/openwrt`](https://github.com/openwrt/openwrt) | ⭐26.8k | 🔥 | This repository is a mirror of https://git.openwrt.org/openwrt/openwrt.git It is for reference only and is ... |
 | [`wg-easy/wg-easy`](https://github.com/wg-easy/wg-easy) | ⭐25.6k | 🔥 | The easiest way to run WireGuard VPN + Web-based Admin UI. |
 | [`henrygd/beszel`](https://github.com/henrygd/beszel) | ⭐21.6k | 🔥 | Lightweight server monitoring with historical data, docker stats, and alerts. |
