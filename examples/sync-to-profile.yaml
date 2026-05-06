@@ -6,15 +6,21 @@
 #     <!-- STARS:START -->
 #     <!-- STARS:END -->
 #
-# The workflow fetches the rendered block from your awesome-stars repo and
-# pastes it in. No PAT needed; the source repo is public.
+# The workflow fetches the rendered block from your stars repo and pastes it
+# in. No PAT needed; the source repo is public.
+#
+# Edit STARS_SOURCE below to point at the repo where your awesome-stars
+# instance lives.
 
-name: Sync stars from awesome-stars
+name: Sync stars
 
 on:
   schedule:
-    - cron: '30 6 * * *'  # 30 minutes after the awesome-stars build
+    - cron: '30 6 * * *'  # 30 minutes after the upstream build
   workflow_dispatch:
+
+env:
+  STARS_SOURCE: ${{ github.repository_owner }}/stars
 
 permissions:
   contents: write
@@ -30,7 +36,7 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Fetch upstream catalog
-        run: curl -fsSL -o /tmp/upstream.md "https://raw.githubusercontent.com/${{ github.repository_owner }}/awesome-stars/main/README.md"
+        run: curl -fsSL -o /tmp/upstream.md "https://raw.githubusercontent.com/${STARS_SOURCE}/main/README.md"
 
       - name: Replace marker block in profile README
         run: |
@@ -39,16 +45,20 @@ jobs:
           from pathlib import Path
           START = "<!-- STARS:START -->"
           END = "<!-- STARS:END -->"
+          pattern = re.compile(re.escape(START) + r".*?" + re.escape(END), re.DOTALL)
+
+          def last_block(text, label):
+              matches = list(pattern.finditer(text))
+              if not matches:
+                  raise SystemExit(f"Markers not found in {label}")
+              return matches[-1]
+
           src = Path("/tmp/upstream.md").read_text()
-          dst = Path("README.md")
-          m = re.search(re.escape(START) + r".*?" + re.escape(END), src, re.DOTALL)
-          if not m:
-              raise SystemExit("Markers not found in upstream README")
-          block = m.group(0)
-          text = dst.read_text()
-          if not re.search(re.escape(START) + r".*?" + re.escape(END), text, re.DOTALL):
-              raise SystemExit("Markers not found in profile README")
-          dst.write_text(re.sub(re.escape(START) + r".*?" + re.escape(END), lambda _: block, text, flags=re.DOTALL))
+          dst_path = Path("README.md")
+          dst = dst_path.read_text()
+          block = last_block(src, "upstream README").group(0)
+          target = last_block(dst, "profile README")
+          dst_path.write_text(dst[:target.start()] + block + dst[target.end():])
           PY
 
       - name: Commit if changed
@@ -60,5 +70,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add README.md
-          git commit -m "chore: sync stars from awesome-stars"
+          git commit -m "chore: sync stars catalog"
           git push
