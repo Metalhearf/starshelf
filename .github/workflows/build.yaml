@@ -22,17 +22,7 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Skip on template repositories
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if [ "$(gh api repos/${{ github.repository }} --jq '.is_template')" = "true" ]; then
-            echo "is_template=true — this repo is the template, nothing to build."
-            echo "SKIP=1" >> "$GITHUB_ENV"
-          fi
-
       - name: Rebuild catalog
-        if: env.SKIP != '1'
         env:
           STARS_TOKEN: ${{ secrets.STARS_TOKEN }}
         run: python .github/scripts/generate_stars.py
