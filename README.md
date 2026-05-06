@@ -2,7 +2,7 @@
 
 A self-rebuilding index of GitHub stars, sorted by the user-lists they belong to. Fork it, point it at your own account and you get the same thing for your stars.
 
-Every morning a GitHub Action queries the GraphQL API, pulls the lists you keep on [github.com/stars/lists](https://github.com/stars/lists), then rewrites the catalog at the bottom of this file. No databases, no third-party services, no maintenance after the first setup.
+Every morning a GitHub Action queries the GraphQL API, pulls the [lists you keep on your stars page](https://docs.github.com/en/get-started/exploring-projects-on-github/saving-repositories-with-stars#organizing-starred-repositories-with-lists), then rewrites the catalog at the bottom of this file. No databases, no third-party services, no maintenance after the first setup.
 
 ## Why
 
@@ -11,8 +11,8 @@ The default GitHub stars tab works fine for a few dozen entries but becomes unus
 ## Use it for your own stars
 
 1. Fork this repo.
-2. Sort your stars into [user-lists](https://github.com/stars/lists) on GitHub. The script reads whatever lists you have and renders one collapsible section per list.
-3. Create a [classic personal access token](https://github.com/settings/tokens/new) with the `read:user` scope. Fine-grained tokens do not work; the `viewer.lists` GraphQL endpoint is undocumented and only honors classic PATs.
+2. Sort your stars into [lists on GitHub](https://docs.github.com/en/get-started/exploring-projects-on-github/saving-repositories-with-stars#organizing-starred-repositories-with-lists). The script reads whatever lists you have and renders one collapsible section per list.
+3. Create a [classic personal access token](https://github.com/settings/tokens/new) with the `read:user` scope.
 4. Add the token as a repository secret named `STARS_TOKEN` (`Settings` → `Secrets and variables` → `Actions`).
 5. Trigger the **Build stars** workflow once from the Actions tab. After that it runs daily at 06:00 UTC.
 
